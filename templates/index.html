@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task Tracker</title>
+    <style>
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: #f5f5dc;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            background-color: #ecf0f1;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+            overflow: hidden;
+            width: 80%;
+            max-width: 600px;
+        }
+
+        h1 {
+            color: #3498db;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        form {
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        input, button {
+            margin-bottom: 15px;
+            width: 100%;
+            padding: 10px;
+            box-sizing: border-box;
+            border: 1px solid #bdc3c7;
+            border-radius: 4px;
+            font-size: 16px;
+            color: #333;
+        }
+
+        button {
+            background-color: #2ecc71;
+            color: #fff;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #27ae60;
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .task {
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            overflow: hidden;
+            margin-bottom: 15px;
+        }
+
+        .delete-btn {
+            background-color: #e74c3c;
+            color: #fff;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .delete-btn:hover {
+            background-color: #c0392b;
+        }
+
+        p {
+            text-align: center;
+            margin: 0;
+        }
+
+        .description {
+            flex: 1;
+            margin-right: 10px;
+            color: #2c3e50;
+            font-weight: bold;
+            font-size: 18px;
+        }
+
+        .time {
+            color: #3498db;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+        }
+
+        .alarm-icon {
+            font-size: 20px;
+            margin-right: 5px;
+        }
+
+        /* Logout button style */
+        .logout-btn {
+            background-color: #e67e22;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 20px;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .logout-btn:hover {
+            background-color: #d35400;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Task Tracker</h1>
+        <form action="/add" method="post">
+            <input type="text" name="description" placeholder="Task description" required>
+            <input type="datetime-local" name="due_date" required>
+            <button type="submit">Add Task</button>
+        </form>
+        <ul>
+            {% for task in tasks %}
+                <div class="task">
+                    <div class="task-content">
+                        <br>
+                        <p class="description">{{ task[1] }}</p><br>
+                        <p class="time">
+                            <span class="alarm-icon">⏰</span>{{ task[2].split('T')[0] }} {{ task[2].split('T')[1] }}
+                        </p><br>
+                        <button class="delete-btn" onclick="location.href='/delete/{{ task[0] }}'">Delete</button>
+                    </div>
+                </div>
+            {% endfor %}
+        </ul>
+        
+        <button class="logout-btn" onclick="location.href='/logout'">Logout</button>
+    </div>
+</body>
+</html>
