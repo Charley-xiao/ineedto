@@ -195,6 +195,18 @@ def check_due_tasks():
         send_email_notification(task[1], task[2], task[3])
 
 
+def check_countdown_tasks():
+    with sqlite3.connect(DATABASE) as connection:
+        cursor = connection.cursor()
+        cursor.execute("SELECT * FROM tasks WHERE due_date <= ? AND due_date >= ?",
+                       ((datetime.now() + timedelta(hours=HOURS)).strftime('%Y-%m-%d %H:%M:%S'),
+                        datetime.now().strftime('%Y-%m-%d %H:%M:%S')))
+        countdown_tasks = cursor.fetchall()
+
+    for task in countdown_tasks:
+        send_email_notification(task[1], task[2], task[3])
+
+
 def send_email_notification(description, due_date, user_id):
     if not user_id:
         return
@@ -226,6 +238,7 @@ if __name__ == '__main__':
 
     scheduler = BackgroundScheduler()
     scheduler.add_job(check_due_tasks, 'interval', hours=HOURS)
+    scheduler.add_job(check_countdown_tasks, 'interval', hours=HOURS)
     scheduler.start()
 
     parser = make_parser()
