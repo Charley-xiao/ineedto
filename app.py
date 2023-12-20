@@ -180,6 +180,10 @@ def delete_task(task_id):
 
     return redirect(url_for('index'))
 
+@app.route('/favicon.ico')
+def favicon():
+    return app.send_static_file('favicon.ico')
+
 
 def check_due_tasks():
     with sqlite3.connect(DATABASE) as connection:

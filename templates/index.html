@@ -161,9 +161,9 @@
         // add text 'TODAY' colored blue if task is due today
         const tasks = document.querySelectorAll('.task');
         const today = new Date();
-        const todayHours = today.getHours();
-        const todayMinutes = today.getMinutes();
-        const todaySeconds = today.getSeconds();
+        var todayHours = today.getHours();
+        var todayMinutes = today.getMinutes();
+        var todaySeconds = today.getSeconds();
         if (todayHours < 10) {
             todayHours = '0' + todayHours;
         }
