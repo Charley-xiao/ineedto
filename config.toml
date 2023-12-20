@@ -1,0 +1,8 @@
+[smtp]
+"server" = "smtp.qq.com"
+"port" = 465
+"username" = "*@qq.com"
+"password" = "*"
+
+[notification]
+"hours" = 24
