@@ -13,8 +13,8 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
         }
+
 
         .container {
             background-color: #ecf0f1;
@@ -111,7 +111,6 @@
             margin-right: 5px;
         }
 
-        /* Logout button style */
         .logout-btn {
             background-color: #e67e22;
             color: #fff;
@@ -144,8 +143,9 @@
                     <div class="task-content">
                         <br>
                         <p class="description">{{ task[1] }}</p><br>
+                        <span class="alarm-icon">⏰</span>
                         <p class="time">
-                            <span class="alarm-icon">⏰</span>{{ task[2].split('T')[0] }} {{ task[2].split('T')[1] }}
+                            {{ task[2].split('T')[0] }} {{ task[2].split('T')[1] }}
                         </p><br>
                         <button class="delete-btn" onclick="location.href='/delete/{{ task[0] }}'">Delete</button>
                     </div>
@@ -155,5 +155,46 @@
         
         <button class="logout-btn" onclick="location.href='/logout'">Logout</button>
     </div>
+    <script>
+        // add text 'UPCOMING' colored green if task is due in the future
+        // add text 'OVERDUE' colored red if task is due in the past
+        // add text 'TODAY' colored blue if task is due today
+        const tasks = document.querySelectorAll('.task');
+        const today = new Date();
+        const todayHours = today.getHours();
+        const todayMinutes = today.getMinutes();
+        const todaySeconds = today.getSeconds();
+        if (todayHours < 10) {
+            todayHours = '0' + todayHours;
+        }
+        if (todayMinutes < 10) {
+            todayMinutes = '0' + todayMinutes;
+        }
+        if (todaySeconds < 10) {
+            todaySeconds = '0' + todaySeconds;
+        }
+        const todayDate = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
+        const todayTime = todayHours + ':' + todayMinutes + ':' + todaySeconds;
+        const todayDateTime = todayDate + 'T' + todayTime;
+        tasks.forEach(task => {
+            var taskTime = task.querySelector('.time').innerText.split(' ')[1];
+            var taskDate = task.querySelector('.time').innerText.split(' ')[0];
+            var taskDateTime = taskDate + 'T' + taskTime + ':00';
+            var difference = Math.abs(new Date(taskDateTime).getTime() - new Date(todayDateTime).getTime());
+            console.log(taskDateTime);
+            console.log(todayDateTime);
+            console.log(difference);
+            if (taskDateTime > todayDateTime) {
+                task.querySelector('.time').innerHTML += '&nbsp;&nbsp;<span style="color: green;"> UPCOMING </span>';
+                task.querySelector('.time').innerHTML += '&nbsp;&nbsp;<span style="color: green;">' + Math.ceil(difference / (1000 * 60 * 60 * 24)) + ' days left</span>';
+            } else if (taskDateTime < todayDateTime) {
+                task.querySelector('.time').innerHTML += '&nbsp;&nbsp;<span style="color: red;"> OVERDUE </span>';
+                task.querySelector('.time').innerHTML += '&nbsp;&nbsp;<span style="color: red;">' + Math.ceil(difference / (1000 * 60 * 60 * 24)) + ' days ago</span>';
+            } else {
+                task.querySelector('.time').innerHTML += '&nbsp;&nbsp;<span style="color: blue;"> TODAY </span>';
+                task.querySelector('.time').innerHTML += '&nbsp;&nbsp;<span style="color: blue;">' + Math.ceil(difference / (1000 * 60 * 60)) + ' hours left</span>';
+            }
+        });
+    </script>
 </body>
 </html>
