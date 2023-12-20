@@ -6,6 +6,7 @@ import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 import tomli
+import argparse
 
 app = Flask(__name__)
 
@@ -18,6 +19,17 @@ with open('config.toml','rb') as f:
     USERNAME = config['smtp']['username']
     PASSWORD = config['smtp']['password']
     HOURS = config['notification']['hours']
+
+def make_parser():
+    parser = argparse.ArgumentParser(
+        description='A simple task manager web application.',
+        formatter_class=argparse.ArgumentDefaultsHelpFormatter,
+    )
+    parser.add_argument('--host', default='127.0.0.1', help='Host to bind to.')
+    parser.add_argument('--port', default=5000, type=int, help='Port to bind to.')
+    return parser
+
+args = None
 
 
 def init_db():
@@ -212,4 +224,7 @@ if __name__ == '__main__':
     scheduler.add_job(check_due_tasks, 'interval', hours=HOURS)
     scheduler.start()
 
-    app.run(debug=True)
+    parser = make_parser()
+    args = parser.parse_args()
+
+    app.run(host=args.host, port=args.port, debug=True)
