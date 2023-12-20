@@ -7,6 +7,7 @@ from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 import tomli
 import argparse
+from waitress import serve
 
 app = Flask(__name__)
 
@@ -245,3 +246,4 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     app.run(host=args.host, port=args.port, debug=True)
+    # serve(app, host=args.host, port=args.port)
